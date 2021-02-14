@@ -3,6 +3,81 @@ const router = express.Router();
 router.use(express.urlencoded({extended: false}));
 router.use(express.json());
 
+router.get("/game/end/:gameId", function(req, res) {
+    let dbConnection = req.app.locals.db;
+    let gameId = req.params.gameId;
+
+    dbConnection.collection(gameId).find({"endGame": 1}).toArray(function(err, data) {
+        if(err !== null) {
+			console.log(err),
+			res.send({mensaje: "Ha habido un error. " + err } );
+		} else {
+			res.send(data);
+		} 
+    })
+});
+
+router.post("/game/end/:gameId", function(req, res) {
+    let dbConnection = req.app.locals.db;
+    let gameId = req.params.gameId;
+
+    dbConnection.collection(gameId).insertOne({"endGame": 1}, function(err, data) {
+        if(err !== null) {
+			console.log(err),
+			res.send({mensaje: "Ha habido un error. " + err } );
+		} else {
+			res.send(data);
+		} 
+    })
+});
+
+router.get("/enemyAttacks/:gameId/:playerId", function(req, res) {
+    let dbConnection = req.app.locals.db;
+    let gameId = req.params.gameId;
+    let playerId = req.params.playerId;
+
+    dbConnection.collection(gameId).find({"player.id": playerId}).toArray(function(err, data) {
+        if(err !== null) {
+			console.log(err),
+			res.send({mensaje: "Ha habido un error. " + err } );
+		} else {
+			res.send(data);
+		} 
+    })
+});
+
+
+router.put("/attacks/:gameId/:playerId", function(req, res) {
+    let dbConnection = req.app.locals.db;
+    let gameId = req.params.gameId;
+    let playerId = req.params.playerId;
+    let attacks = req.body.attacks;
+
+    dbConnection.collection(gameId).update({"player.id": playerId}, {$set: {"player.attacks": attacks}}, function(err, data) {
+        if(err !== null) {
+			console.log(err),
+			res.send({mensaje: "Ha habido un error. " + err } );
+		} else {
+			res.send(data);
+		} 
+    })
+});
+
+router.get("/enemyShips/:gameId/:playerId", function(req, res) {
+    let dbConnection = req.app.locals.db;
+    let gameId = req.params.gameId;
+    let playerId = req.params.playerId;
+
+    dbConnection.collection(gameId).find({"player.id": playerId}).toArray(function(err, data) {
+        if(err !== null) {
+			console.log(err),
+			res.send({mensaje: "Ha habido un error. " + err } );
+		} else {
+			res.send(data);
+		} 
+    })
+});
+
 router.put("/nextTurn/:gameId/:gameTurn/:nextTurn", function(req, res) {
     let dbConnection = req.app.locals.db;
     let gameId = req.params.gameId;

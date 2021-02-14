@@ -48,7 +48,11 @@ document.addEventListener('DOMContentLoaded', () => {
         createPlayer(game, this);
     });
 
-    document.querySelector("#attack").addEventListener("click", function(e){
+    document.querySelector("#attack").addEventListener("click", function(){
+        let attackedTile = document.querySelector(".attack-tile").value;
+        document.querySelector(".last-shot-tile").innerHTML = attackedTile;
+        document.querySelector(".attack-tile").value = "";
+        updatePlayerAttack(game, attackedTile);
         nextTurn(game);
     });
 
@@ -77,10 +81,16 @@ function startGame (game) {
     startPanelButton.classList.add("hidden");
 
     newGame.addEventListener("click", function () {
+        document.querySelector("#player-name").innerHTML = "Jugador 1";
+        document.querySelector("#enemy-name").innerHTML = "Jugador 2";
+        game.player[1].id = "player2";
         createNewGame(game, "player1", newGame, joinGame, startPanelContent, startPanel);
     }) 
 
     joinGame.addEventListener("click", function () {
+        document.querySelector("#player-name").innerHTML = "Jugador 2";
+        document.querySelector("#enemy-name").innerHTML = "Jugador 1";
+        game.player[1].id = "player1";
         updateStartPanel(game, "", "player2", newGame, joinGame, startPanelContent, startPanel);
     })
 }
@@ -311,15 +321,17 @@ function isMyTurn (game, turn) {
     let fetchData = {
         method: "GET",
     }
-    console.log("hola");
+
     fetch("/game/gameTurn/" + game.gameId + "/" + game.player[0].id, fetchData)
     .then(response => response.json())
     .then(data => {
         if (data.length > 0) {
             game.gameTurn = data[0].gameTurn;
             updateGameTurn(game.gameTurn);
+            getEnemyAttacks(game);
             enableAttack();
             clearInterval(turn);
+            isTheEnd(game);
         }
     })
 }
@@ -369,6 +381,181 @@ function nextTurn (game) {
             checkTurn(game);
     })
 }
+
+function printAttacks (game, attacker, defender, playerBoard) {
+    attacker.attacks.forEach(element => {
+        let row = element.substring(0, 1);
+        let column = element.substring(1);
+        let attackedTile;
+
+        if (defender.ships.includes(element)) {
+            attackedTile = playerBoard.addElement("div", "id= class=attack-success");
+
+        } else {
+            attackedTile = playerBoard.addElement("div", "id= class=attack-fail");
+        }
+        attackedTile.style.gridRowStart = row;
+        attackedTile.style.gridColumnStart = column;
+    })
+
+    if (attacker.id === game.player[0].id) {
+        updateShotEffect(attacker, defender);
+    }
+}
+
+function updateShotEffect (attacker, defender) {
+    let lastAttack = attacker.attacks[attacker.attacks.length - 1];
+
+    if (defender.ships.includes(lastAttack)) {
+        if (checkSinked (defender.ships, attacker.attacks, lastAttack)) {
+            document.querySelector(".last-shot-effect").innerHTML = "HUNDIDO";
+            if (checkWin(attacker, defender)) {
+                finishGame(attacker, defender);
+            }
+        } else {
+            document.querySelector(".last-shot-effect").innerHTML = "TOCADO";
+        }
+    } else {
+        document.querySelector(".last-shot-effect").innerHTML = "AGUA";
+    }            
+}
+
+function checkSinked (ships, attacks, lastAttack) {
+    let ship = [];
+    let attackIndex = ships.indexOf(lastAttack);
+    let i = 0;
+    let check = true;
+
+    if (attackIndex < 2) {
+        ship = getShip(ships, 0, 2);
+    } else if (attackIndex < 5) {
+        ship = getShip(ships, 2, 5);
+    } else if (attackIndex < 8) {
+        ship = getShip(ships, 5, 8);
+    } else if (attackIndex < 12) {
+        ship = getShip(ships, 8, 12);
+    } else {
+        ship = getShip(ships, 12, 17);
+    }
+
+    do {
+        if (!attacks.includes(ship[i])) {
+            check = false;
+        }
+        i++;
+    } while (check && i < ship.length)
+
+    return check;
+}
+
+function getShip (ships, shipFirstIndex, shipLastIndex) {
+    let ship = [];
+    for (i = shipFirstIndex; i < shipLastIndex; i++) {
+        ship.push(ships[i]);
+    }
+    return ship;
+}
+
+function checkWin(attacker, defender) {
+    let i = 0;
+    let win = true;
+
+    do {
+        if (!attacker.attacks.includes(defender.ships[i])) {
+            win = false;
+        }
+        i++;
+    } while (win && i < defender.ships.length)
+
+    return win;
+}
+
+function finishGame (attacker, defender) {
+    endPanel("Has ganado");
+
+    let fetchData = {
+        method: "POST",
+    }
+    
+    fetch("/game/end/" + game.gameId, fetchData);
+}
+
+function endPanel(text){
+    let container = document.querySelector(".container");
+    let endPanel = feedbackPanel(container);
+    let endPanelContent = document.querySelector(".feedback-content");
+    let endPanelButton = document.querySelector(".feedback-button");
+    let endGame = startPanelContent.addElement("button", "id=new-game-button class=start-panel-button", "Salir");
+
+    endPanelButton.classList.add("hidden");
+    endPanelContent.addElement("p", "id= class=end-text", text);
+    endGame.addEventListener("click", function () {
+        location.reload();
+    })
+}
+
+function isTheEnd (game) {
+    let fetchData = {
+        method: "GET",
+    }
+    
+    fetch("/game/end/" + game.gameId, fetchData)
+    .then(response => response.json())
+    .then(data => {
+        if (data[0].length > 0) {
+            endPanel("Has perdido");
+        }
+    })
+}
+
+function getEnemyShips (game) {
+    let fetchData = {
+        method: "GET",
+    }
+    
+    fetch("/game/enemyShips/" + game.gameId + "/" + game.player[1].id, fetchData)
+    .then(response => response.json())
+    .then(data => {
+        game.player[1].ships = data[0].player.ships;
+        let enemyBoard = document.querySelector("#enemy-game-board");
+        printAttacks(game, game.player[0], game.player[1], enemyBoard);
+    })
+}
+
+function updatePlayerAttack(game, attackedTile) {
+    game.player[0].attacks.push(attackedTile);
+    data = {
+        "attacks": game.player[0].attacks
+    }
+
+    let fetchData = {
+        method: "PUT",
+        body: JSON.stringify(data),
+        headers: {
+            "Content-type": "application/json; charset=UTF-8"
+        }
+    }
+    
+    fetch("/game/attacks/" + game.gameId + "/" + game.player[0].id, fetchData)
+    .then(response => response.json())
+    .then(getEnemyShips(game))
+}
+
+function getEnemyAttacks (game) {
+    let fetchData = {
+        method: "GET",
+    }
+    
+    fetch("/game/enemyAttacks/" + game.gameId + "/" + game.player[1].id, fetchData)
+    .then(response => response.json())
+    .then(data => {
+        game.player[1].attacks = data[0].player.attacks;
+        let playerBoard = document.querySelector("#player-game-board");
+        printAttacks(game, game.player[1], game.player[0], playerBoard);
+    })
+}
+
+
 
 //Add html element to DOM: elementFather.addElement(elementType, "id= class=", innerHTML)
 Object.prototype.addElement = function (elementType, selector, innerHTML) {
