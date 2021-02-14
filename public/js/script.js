@@ -314,7 +314,7 @@ function createNewGame(game, player, newGame, joinGame, startPanelContent, start
 
 function checkTurn(game) {
     let turn;
-    turn = setInterval(function(){ isMyTurn(game, turn); }, 3000);
+    turn = setInterval(function(){ isMyTurn(game, turn); }, 1000);
 }
 
 function isMyTurn (game, turn) {
@@ -399,18 +399,18 @@ function printAttacks (game, attacker, defender, playerBoard) {
     })
 
     if (attacker.id === game.player[0].id) {
-        updateShotEffect(attacker, defender);
+        updateShotEffect(game.gameId, attacker, defender);
     }
 }
 
-function updateShotEffect (attacker, defender) {
+function updateShotEffect (gameId, attacker, defender) {
     let lastAttack = attacker.attacks[attacker.attacks.length - 1];
 
     if (defender.ships.includes(lastAttack)) {
         if (checkSinked (defender.ships, attacker.attacks, lastAttack)) {
             document.querySelector(".last-shot-effect").innerHTML = "HUNDIDO";
             if (checkWin(attacker, defender)) {
-                finishGame(attacker, defender);
+                finishGame(gameId);
             }
         } else {
             document.querySelector(".last-shot-effect").innerHTML = "TOCADO";
@@ -470,8 +470,8 @@ function checkWin(attacker, defender) {
     return win;
 }
 
-function finishGame (attacker, defender) {
-    endPanel("Has ganado");
+function finishGame (gameId) {
+    endPanel(gameId, "¡Has ganado!");
 
     let fetchData = {
         method: "POST",
@@ -480,18 +480,28 @@ function finishGame (attacker, defender) {
     fetch("/game/end/" + game.gameId, fetchData);
 }
 
-function endPanel(text){
+function endPanel(gameId, text){
     let container = document.querySelector(".container");
     let endPanel = feedbackPanel(container);
     let endPanelContent = document.querySelector(".feedback-content");
     let endPanelButton = document.querySelector(".feedback-button");
-    let endGame = startPanelContent.addElement("button", "id=new-game-button class=start-panel-button", "Salir");
 
     endPanelButton.classList.add("hidden");
     endPanelContent.addElement("p", "id= class=end-text", text);
+
+    let endGame = endPanelContent.addElement("button", "id=new-game-button class=end-panel-button", "Salir");
     endGame.addEventListener("click", function () {
-        location.reload();
+        deleteGame(gameId);
     })
+}
+
+function deleteGame(gameId) {
+    let fetchData = {
+        method: "DELETE",
+    }
+    
+    fetch("/game/delete/" + gameId, fetchData)
+    .then(location.reload())
 }
 
 function isTheEnd (game) {
@@ -503,7 +513,7 @@ function isTheEnd (game) {
     .then(response => response.json())
     .then(data => {
         if (data[0].length > 0) {
-            endPanel("Has perdido");
+            endPanel(game.gameId, "¡Has perdido!");
         }
     })
 }

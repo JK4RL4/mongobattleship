@@ -449,3 +449,17 @@ body {
     background: url("../img/attack_fail.png") no-repeat;
     background-size: 100% 100%;
 }
+
+.end-text {
+    font-family: "MachineStd";
+    font-size: 2rem;
+    text-align: center;
+}
+
+.end-panel-button {
+    width: 5rem;
+    margin: 1rem 1.8rem;
+    font-family: "MachineStd";
+    font-size: 1rem;
+    color: black;
+}

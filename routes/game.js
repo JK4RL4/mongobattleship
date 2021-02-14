@@ -3,7 +3,21 @@ const router = express.Router();
 router.use(express.urlencoded({extended: false}));
 router.use(express.json());
 
-router.get("/game/end/:gameId", function(req, res) {
+router.delete("/delete/:gameId", function(req, res) {
+    let dbConnection = req.app.locals.db;
+    let gameId = req.params.gameId;
+
+    dbConnection.dropCollection(gameId, function(err, data) {
+        if(err !== null) {
+			console.log(err),
+			res.send({mensaje: "Ha habido un error. " + err } );
+		} else {
+			res.send(data);
+		} 
+    })
+});
+
+router.get("/end/:gameId", function(req, res) {
     let dbConnection = req.app.locals.db;
     let gameId = req.params.gameId;
 
@@ -17,7 +31,7 @@ router.get("/game/end/:gameId", function(req, res) {
     })
 });
 
-router.post("/game/end/:gameId", function(req, res) {
+router.post("/end/:gameId", function(req, res) {
     let dbConnection = req.app.locals.db;
     let gameId = req.params.gameId;
 
