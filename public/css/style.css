@@ -1,0 +1,438 @@
+@font-face{
+    font-family: "MachineStd";
+    src: url("../font/MachineStd.otf"); 
+}
+
+@font-face{
+    font-family: "usnavy";
+    src: url("../font/usnavy.ttf"); 
+}
+
+body {
+    background: url("../img/background.jpg") no-repeat;
+    background-size: 100% 100%;
+    margin: 0;
+    padding: 0;
+}
+
+.hidden {
+    display: none;
+}
+
+.header {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    margin-bottom: 1rem;
+}
+
+.header h1 {
+    margin: 1rem 0 0 2rem;
+    padding: 0;
+    font-family: "MachineStd";
+    text-shadow: 1px 1px gray;
+}
+
+.red {
+    color: rgb(130, 5, 5);
+}
+
+.header h2 {
+    margin: 0;
+    padding: 0;
+    font-family: "usnavy";
+    color: black;
+    text-shadow: 1px 1px gray;
+}
+
+.container {
+    position: relative;
+    width: 100%;
+    height: 100vh;
+    margin: 0;
+    padding: 0;
+}
+
+.footer {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    height: 5vh;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    background: rgb(4, 10, 44);
+    border-top: 1px rgb(2, 6, 84) solid;
+}
+
+.footer p {
+    margin: 0;
+    padding: 0;
+    font-family: Verdana, Tahoma, sans-serif;
+    font-size: 0.6rem;    
+    color: white;
+    margin-left: 2rem;
+}
+
+.footer img {
+    height: 4vh;
+    width: auto;
+    margin-right: 2rem;
+}
+
+.footer-logo {
+    height: 5vh;
+    width: 40%;
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    background-image: linear-gradient(to right, rgb(4, 10, 44) , white);
+}
+
+.game-table {
+    width: 100%;
+    height: 80vh;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-around;
+    align-items: center;
+}
+
+.player, .enemy {
+    width: 50%;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.player-board-container {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+}
+
+.player p, .enemy p {
+    font-size: 2rem;
+    margin: 0 0 0.5rem 0;
+    font-family: "MachineStd";
+    text-transform: uppercase;
+}
+
+.ships {
+    width: 20%;
+    height: 65vh;
+    margin-right: 1rem;
+    background: rgb(173, 207, 255);
+    border: 1px black solid;
+    box-shadow: 0px 0px 10px black;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.ships form {
+    height: 65vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-around;
+    align-items: center;
+    padding: 1rem;
+}
+
+.ship-inputs {
+    width: 100%;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-around;
+}
+
+.ship-tile, .attack-tile {
+    width: 1rem;
+    text-transform: uppercase;
+    overflow: none;
+}
+
+.ship-tile-select {
+    width: 3rem;
+}
+
+.attack-input {
+    padding: 1rem;
+    background: url("../img/attack_img.png") no-repeat;
+    background-size: 100% 100%;
+}
+
+.attack-tile {
+    margin: 1rem;
+}
+
+.ship {
+    height: 1.2rem;
+    width: auto;
+    filter: drop-shadow(0.1rem 0.1rem) grayscale(100%);
+}
+
+.game-board-rows, .game-board-columns {
+    font-family: "MachineStd";
+    font-size: 2rem;
+    color: white;
+    text-shadow: 1px 1px 2px black;
+}
+
+.game-board-rows {
+    height: 65vh;
+    max-height: 65vh;
+    width: 1rem;
+    margin: 0.5rem 1.5rem 0 1rem;
+    display: grid;
+    grid-template-rows: repeat(8, 12.5%);
+    grid-template-columns: 1 100%;
+}
+
+.game-board-rows p, .game-board-columns p {
+    margin: 0;
+    padding: 0;
+    text-align: center;
+}
+
+.game-board-columns {
+    height: 2.5rem;
+    width: 65vh;
+    margin-left: 29%;
+    display: grid;
+    grid-template-rows: 1 100%;
+    grid-template-columns: repeat(8, 12.3%);
+}
+
+.player2-game-board-columns {
+    margin-left: 29%;
+}
+
+.player2-game-board-rows {
+    margin-right: 0.5rem;
+}
+
+.player-name {
+    background: url("../img/player_badge.png") no-repeat;
+    background-size: 100% 100%;
+    padding: 1rem;
+}
+
+.game-board {
+    height: 65vh;
+    width: 65vh;
+    background: url("../img/game_background.png") no-repeat;
+    background-size: 100% 100%;
+    box-shadow: 0px 0px 10px black;
+    display: grid;
+    grid-template-columns: repeat(8, 12.5%);
+    grid-template-rows: repeat(8, 12.5%);
+}
+
+.control-pannel {
+    width: 15%;
+    height: 60vh;
+    margin-right: 0 1rem;
+    background: rgb(173, 207, 255);
+    border: 1px black solid;
+    box-shadow: 0px 0px 10px black;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1rem;
+}
+
+.start-button {
+    width: 4rem;
+    height: 2rem;
+    font-family: "MachineStd";
+    font-size: 1rem;
+    color: rgb(255, 255, 255);
+    text-shadow: 1px 1px black;
+    text-align: center;
+    background: rgb(150, 18, 18);
+    outline: none;
+    box-shadow: 0px 0px 2px black; 
+}
+
+.control-button {
+    width: 4rem;
+    height: 4rem;
+    font-family: "MachineStd";
+    font-size: 1rem;
+    color: rgb(255, 255, 255);
+    text-shadow: 1px 1px black;
+    text-align: center;
+    background: rgb(150, 18, 18);
+    border-radius: 5rem;
+    outline: none;
+    box-shadow: 0px 0px 5px black; 
+}
+
+.feedback-background {
+    position: absolute;
+    z-index: 99;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100vh;
+    background:black;
+    opacity: 0.5;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-around;
+    align-items: center;
+}
+
+.feedback-panel {
+    position: absolute;
+    z-index: 999;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 15rem;
+    background: white;
+    border: 1px black solid;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    padding: 2rem;
+    box-shadow: 1px 1px black;
+}
+
+.feedback-content {
+    margin: 0 auto;
+}
+
+.start-panel-button {
+    width: 5rem;
+    margin: 1rem;
+    font-family: "MachineStd";
+    font-size: 1rem;
+    color: black;
+}
+
+.start-panel-input {
+    width: 50%;
+    margin: 1rem 0;
+}
+
+.start-panel-text {
+    width: 50%;
+    font-family: "MachineStd";
+    font-size: 1rem;
+    margin: 0;
+}
+
+.wrong-tile {
+    border-color: red;
+}
+
+#ship2-img {
+    background: url("../img/ship2.png") no-repeat;
+    background-size: 90% 90%;
+    background-position: center;
+}
+
+#ship31-img {
+    background: url("../img/ship31.png") no-repeat;
+    background-size: 90% 90%;
+    background-position: center;
+}
+
+#ship32-img {
+    background: url("../img/ship32.png") no-repeat;
+    background-size: 90% 90%;
+    background-position: center;
+}
+
+#ship4-img {
+    background: url("../img/ship4.png") no-repeat;
+    background-size: 90% 90%;
+    background-position: center;
+}
+
+#ship5-img {
+    background: url("../img/ship5.png") no-repeat;
+    background-size: 90% 90%;
+    background-position: center;
+}
+
+#ship2-img-vertical {
+    background: url("../img/ship2_vertical.png") no-repeat;
+    background-size: 90% 90%;
+    background-position: center;
+}
+
+#ship31-img-vertical {
+    background: url("../img/ship31_vertical.png") no-repeat;
+    background-size: 90% 90%;
+    background-position: center;
+}
+
+#ship32-img-vertical {
+    background: url("../img/ship32_vertical.png") no-repeat;
+    background-size: 90% 90%;
+    background-position: center;
+}
+
+#ship4-img-vertical {
+    background: url("../img/ship4_vertical.png") no-repeat;
+    background-size: 90% 90%;
+    background-position: center;
+}
+
+#ship5-img-vertical {
+    background: url("../img/ship5_vertical.png") no-repeat;
+    background-size: 90% 90%;
+    background-position: center;
+}
+
+.game-turn-title, .last-shot-title {
+    font-size: 1.5rem !important;
+    text-align: center;
+}
+
+.game-turn-player, .last-shot-tile, .last-shot-effect {
+    margin: 0 !important;
+    padding: 0 !important;
+    font-size: 1.4rem !important;
+    text-align: center;
+    color: rgb(117, 6, 30);
+}
+
+.last-shot {
+    margin-top: 1rem;
+}
+
+.last-shot-data {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+}
+
+.last-shot-tile {
+    height: 2rem;
+    text-align: center;
+    color: rgb(117, 6, 30);
+}
+
+.last-shot-effect {
+    height: 2rem;
+    text-align: center;
+    color: rgb(117, 6, 30);
+}
+
+.disabled {
+    background: gray;
+}

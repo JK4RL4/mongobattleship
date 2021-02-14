@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="./css/style.css">
+    <title>Mongo Battleship</title>
+</head>
+
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>Mongo<span class="red">Battleship</span></h1>
+            <h2>t</h2>
+        </div>
+        <div class="game-table">
+            <div class="player">
+                <p class="player-name">Jugador 1</p>
+                <div class="game-board-columns">                        
+                    <p>1</p>
+                    <p>2</p>
+                    <p>3</p>
+                    <p>4</p>
+                    <p>5</p>
+                    <p>6</p>
+                    <p>7</p>
+                    <p>8</p>
+                </div>
+                <div class="player-board-container">
+                    <div id="player-ships" class="ships">
+                        <form>
+                            <img id="ship2" class="ship" src="img/ship2.png">
+                            <div class="ship-inputs">
+                                <input type="text" maxlength = "2" class="ship-tile ship-first-tile" id="ship2-tile1" name="ship2-tile1">
+                                <select name="ship2-tile1-select" class="ship-tile-select" id="ship2-tile1-select"></select>
+                                <input type="hidden" maxlength = "2" class="ship-tile" id="ship2-tile2" name="ship2-tile2">
+                            </div>
+                            <img id="ship31" class="ship" src="img/ship31.png">
+                            <div class="ship-inputs">
+                                <input type="text" maxlength = "2" class="ship-tile ship-first-tile" id="ship31-tile1" name="ship31-tile1">
+                                <select name="ship31-tile1-select" class="ship-tile-select" id="ship31-tile1-select"></select>
+                                <input type="hidden" maxlength = "2" class="ship-tile" id="ship31-tile3" name="ship31-tile3">
+                            </div>
+                            <img id="ship32" class="ship" src="img/ship32.png">
+                            <div class="ship-inputs">
+                                <input type="text" maxlength = "2" class="ship-tile ship-first-tile" id="ship32-tile1" name="ship32-tile1">
+                                <select name="ship32-tile1-select" class="ship-tile-select" id="ship32-tile1-select"></select>
+                                <input type="hidden" maxlength = "2" class="ship-tile" id="ship32-tile3" name="ship32-tile3">
+                            </div>
+                            <img id="ship4" class="ship" src="img/ship4.png">
+                            <div class="ship-inputs">
+                                <input type="text" maxlength = "2" class="ship-tile ship-first-tile" id="ship4-tile1" name="ship4-tile1">
+                                <select name="ship4-tile1-select" class="ship-tile-select" id="ship4-tile1-select"></select>
+                                <input type="hidden" maxlength = "2" class="ship-tile" id="ship4-tile4" name="ship4-tile4">
+                            </div>
+                            <img id="ship5" class="ship" src="img/ship5.png">
+                            <div class="ship-inputs">
+                                <input type="text" maxlength = "2" class="ship-tile ship-first-tile" id="ship5-tile1" name="ship5-tile1">
+                                <select name="ship5-tile1-select" class="ship-tile-select" id="ship5-tile1-select"></select>
+                                <input type="hidden" maxlength = "2" class="ship-tile" id="ship5-tile5" name="ship5-tile5">
+                            </div>
+                            <button id="start" class="start-button">EMPEZAR</button>
+                        </form>
+                    </div>
+                    <div class="game-board-rows">
+                        <p>1</p>
+                        <p>2</p>
+                        <p>3</p>
+                        <p>4</p>
+                        <p>5</p>
+                        <p>6</p>
+                        <p>7</p>
+                        <p>8</p>
+                    </div>
+                    <div id="player-game-board" class="game-board">
+                        <div id="ship2-img" class="ship-img ship2-img hidden"></div>
+                        <div id="ship31-img" class="ship-img ship31-img hidden"></div>
+                        <div id="ship32-img" class="ship-img ship32-img hidden"></div>
+                        <div id="ship4-img" class="ship-img ship4-img hidden"></div>
+                        <div id="ship5-img" class="ship-img ship5-img hidden"></div>
+                        <div id="ship2-img-vertical" class="ship-img ship2-img hidden"></div>
+                        <div id="ship31-img-vertical" class="ship-img ship31-img hidden"></div>
+                        <div id="ship32-img-vertical" class="ship-img ship32-img hidden"></div>
+                        <div id="ship4-img-vertical" class="ship-img ship4-img hidden"></div>
+                        <div id="ship5-img-vertical" class="ship-img ship5-img hidden"></div>
+                    </div>
+                </div>
+            </div>
+            <div class="enemy">
+                <p class="player-name">Jugador 2</p>
+                <div class="game-board-columns player2-game-board-columns">                        
+                    <p>1</p>
+                    <p>2</p>
+                    <p>3</p>
+                    <p>4</p>
+                    <p>5</p>
+                    <p>6</p>
+                    <p>7</p>
+                    <p>8</p>
+                </div>
+                <div class="player-board-container">
+                    <div class="control-pannel">
+                        <div class="game-turn">
+                            <p class="game-turn-title">TURNO</p>
+                            <p class="game-turn-player">ESPERANDO</p>
+                        </div>
+                        <div class="attack-input">
+                            <input type="text" maxlength = "2" class="attack-tile" name="attack-tile">
+                        </div>
+                        <button id="attack" class="control-button" disabled>ATACAR</button>
+                        <div class="last-shot">
+                            <p class="last-shot-title">ÚLTIMO DISPARO</p>
+                            <div clas="last-shot-data">
+                                <p class="last-shot-tile">XX</p>
+                                <p class="last-shot-effect">EFECTO</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="game-board-rows player2-game-board-rows">
+                        <p>1</p>
+                        <p>2</p>
+                        <p>3</p>
+                        <p>4</p>
+                        <p>5</p>
+                        <p>6</p>
+                        <p>7</p>
+                        <p>8</p>
+                    </div>
+                    <div id="enemy-game-board" class="game-board"></div>
+                </div>
+            </div>
+        </div>
+        <div class="footer">
+            <p>Realizado por J. K. Somoza</p>
+            <div class="footer-logo">
+                <img src="./img/bbk_logo.png">
+            </div>
+        </div>
+    </div>
+    <script src="./js/variables.js"></script> 
+    <script src="./js/script.js"></script> 
+</body>
+
+</html>
