@@ -50,13 +50,28 @@ document.addEventListener('DOMContentLoaded', () => {
 
     document.querySelector("#attack").addEventListener("click", function(){
         let attackedTile = document.querySelector(".attack-tile").value;
-        document.querySelector(".last-shot-tile").innerHTML = attackedTile;
-        document.querySelector(".attack-tile").value = "";
-        updatePlayerAttack(game, attackedTile);
-        nextTurn(game);
+        if (game.player[0].attacks) {
+            if (!game.player[0].attacks.includes(attackedTile)) {
+                shoot(attackedTile, game);
+            } else {
+                container = document.querySelector(".container");
+                feedbackPanel(container);
+                let attackRepeatedPanel = document.querySelector(".feedback-content");
+                attackRepeatedPanel.addElement("p", "id= class=end-text", "Ya has atacado esta casilla");
+            }
+        } else {
+            shoot(attackedTile, game);
+        }
     });
 
 })
+
+function shoot(attackedTile, game) {
+    document.querySelector(".last-shot-tile").innerHTML = attackedTile;
+    document.querySelector(".attack-tile").value = "";
+    updatePlayerAttack(game, attackedTile);
+    nextTurn(game);
+}
 
 function disableAttack () {
     let attackButton = document.querySelector("#attack");
@@ -574,7 +589,6 @@ function canJoin(gameId) {
     fetch("/game/canJoin/" + gameId, fetchData)
     .then(response => response.json())
     .then(data => {
-        console.log(data.canJoin);
         if (!data.canJoin) {
             let container = document.querySelector(".container");
             let fullPanel = feedbackPanel(container);
