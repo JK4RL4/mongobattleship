@@ -110,6 +110,7 @@ function updateStartPanel(game, gameId, player, newGame, joinGame, startPanelCon
         game.player[0].id = player;
         document.querySelector(".feedback-background").remove();
         startPanel.remove();
+        canJoin(game.gameId);
     })
 }
 
@@ -314,7 +315,7 @@ function createNewGame(game, player, newGame, joinGame, startPanelContent, start
 
 function checkTurn(game) {
     let turn;
-    turn = setInterval(function(){ isMyTurn(game, turn); }, 1000);
+    turn = setInterval(function(){ isMyTurn(game, turn); }, 2000);
 }
 
 function isMyTurn (game, turn) {
@@ -331,7 +332,7 @@ function isMyTurn (game, turn) {
             getEnemyAttacks(game);
             enableAttack();
             clearInterval(turn);
-            isTheEnd(game);
+            isTheEnd(game.gameId);
         }
     })
 }
@@ -477,7 +478,7 @@ function finishGame (gameId) {
         method: "POST",
     }
     
-    fetch("/game/end/" + game.gameId, fetchData);
+    fetch("/game/end/" + gameId, fetchData);
 }
 
 function endPanel(gameId, text){
@@ -504,16 +505,16 @@ function deleteGame(gameId) {
     .then(location.reload())
 }
 
-function isTheEnd (game) {
+function isTheEnd (gameId) {
     let fetchData = {
         method: "GET",
     }
     
-    fetch("/game/end/" + game.gameId, fetchData)
+    fetch("/game/end/" + gameId, fetchData)
     .then(response => response.json())
     .then(data => {
-        if (data[0].length > 0) {
-            endPanel(game.gameId, "¡Has perdido!");
+        if (data.endGame) {
+            endPanel(gameId, "¡Has perdido!");
         }
     })
 }
@@ -565,6 +566,31 @@ function getEnemyAttacks (game) {
     })
 }
 
+function canJoin(gameId) {
+    let fetchData = {
+        method: "POST",
+    }
+
+    fetch("/game/canJoin/" + gameId, fetchData)
+    .then(response => response.json())
+    .then(data => {
+        console.log(data.canJoin);
+        if (!data.canJoin) {
+            let container = document.querySelector(".container");
+            let fullPanel = feedbackPanel(container);
+            let fullPanelContent = document.querySelector(".feedback-content");
+            let fullPanelButton = document.querySelector(".feedback-button");
+        
+            fullPanelButton.classList.add("hidden");
+            fullPanelContent.addElement("p", "id= class=end-text", "La partida está completa");
+        
+            let fullGame = fullPanelContent.addElement("button", "id= class=full-panel-button", "Volver");
+            fullGame.addEventListener("click", function () {
+                location.reload();
+            })
+        }
+    })
+}
 
 
 //Add html element to DOM: elementFather.addElement(elementType, "id= class=", innerHTML)

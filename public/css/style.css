@@ -458,7 +458,17 @@ body {
 
 .end-panel-button {
     width: 5rem;
-    margin: 1rem 1.8rem;
+    margin: 1rem;
+    margin-left: 2.8rem;
+    font-family: "MachineStd";
+    font-size: 1rem;
+    color: black;
+}
+
+.full-panel-button {
+    width: 5rem;
+    margin: 1rem;
+    margin-left: 33%;
     font-family: "MachineStd";
     font-size: 1rem;
     color: black;

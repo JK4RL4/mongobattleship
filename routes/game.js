@@ -3,6 +3,42 @@ const router = express.Router();
 router.use(express.urlencoded({extended: false}));
 router.use(express.json());
 
+router.post("/canJoin/:gameId", function(req, res) {
+    let dbConnection = req.app.locals.db;
+    let gameId = req.params.gameId;
+
+    dbConnection.collection(gameId).find({"joinGame": { $exists : true }}).toArray(function(err, data) {
+        if(err !== null) {
+			console.log(err),
+			res.send({mensaje: "Ha habido un error. " + err } );
+		} else {
+            if (data.length > 0) {
+                if (data[0].joinGame < 2) {
+                    dbConnection.collection(gameId).updateOne({"joinGame": 1}, {$set: {"joinGame": 2}}, function(err, data) {
+                        if(err !== null) {
+                            console.log(err),
+                            res.send({mensaje: "Ha habido un error. " + err } );
+                        } else {
+                            res.send({canJoin: true});
+                        } 
+                    })
+                } else {
+                    res.send({canJoin: false});
+                }
+            } else {
+                dbConnection.collection(gameId).insertOne({"joinGame": 1}, function(err, data) {
+                    if(err !== null) {
+                        console.log(err),
+                        res.send({mensaje: "Ha habido un error. " + err } );
+                    } else {
+                        res.send({canJoin: true});
+                    } 
+                })
+            }
+		} 
+    })
+});
+
 router.delete("/delete/:gameId", function(req, res) {
     let dbConnection = req.app.locals.db;
     let gameId = req.params.gameId;
@@ -26,7 +62,11 @@ router.get("/end/:gameId", function(req, res) {
 			console.log(err),
 			res.send({mensaje: "Ha habido un error. " + err } );
 		} else {
-			res.send(data);
+            if (data.length > 0) {
+                res.send({endGame: true});
+            } else {
+                res.send({endGame: false});
+            }
 		} 
     })
 });
